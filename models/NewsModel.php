@@ -37,73 +37,7 @@ class newsModel{
         $obj->disconnect($c);
         return $r;
       }
-      public function gestionNews(){
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "SELECT *
-        FROM news";    
-        $r=$obj->request($c,$qtf);
-        $obj->disconnect($c);
-        return $r; 
-      }
-      public function validernews($idnews){
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "UPDATE news
-        SET  news.statut=true
-        WHERE news.idnews=$idnews";    
-        $r=$obj->request($c,$qtf);
-        $obj->disconnect($c);
-        return $r; 
-      }
-      public function deletenews($idnews){
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "UPDATE news
-        SET  news.statut=false
-        WHERE news.idnews=$idnews";    
-        $r=$obj->request($c,$qtf);
-        $obj->disconnect($c);
-        return $r; 
-      }
-      public function createnews($titre,$text,$statut){
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "INSERT INTO  news(titre,text,date,statutnews) VALUES(?,?,NOW(),?)";    
-        $qtf->bindParam(1, $titre);
-        $qtf->bindParam(2, $text);
-        $qtf->bindParam(3, $statut);
-        $r=$qtf->execute();
-        $obj->disconnect($c);
-        return $r; 
-      }
-      public function updatenews($titre,$text,$statut,$idnews){
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "UPDATE news SET news.titre=? news.text=? news.statut=?
-        WHERE news.idnews= ?";    
-        $qtf->bindParam(1, $titre);
-        $qtf->bindParam(2, $text);
-        $qtf->bindParam(3, $statut);
-        $qtf->bindParam(4,$idnews);
-        $r=$qtf->execute();
-        $obj->disconnect($c);
-        return $r; 
-      }
-
-
-
-
-      public function deleteMarque($idmarque){
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "UPDATE news
-        SET  news.statut=false
-        WHERE news.idnews=$idnews";    
-        $r=$obj->request($c,$qtf);
-        $obj->disconnect($c);
-        return $r; 
-      }
+  
 }
 
 

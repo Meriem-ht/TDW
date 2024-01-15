@@ -194,6 +194,69 @@ public function deleteVehicule($id){
   return $r;
 }
 }
+public function addVehicule($idmarque){
+  $obj = new categoriesView();
+  $r = $obj->showAddVehicule($idmarque);
+  return $r;
+}
+public function getcarac(){
+  $obj = new categoriesModel();
+  $r = $obj->getcarac();
+  return $r;
+}
+private function addModele($modele,$idmarque){
+  $obj = new categoriesModel();
+  $r= $obj->addModele($modele,$idmarque);
+  return $r;
+}
+private function getModele($modele,$idmarque){
+  $obj = new categoriesModel();
+  $r= $obj->getModele($modele,$idmarque);
+  return $r;
+}
+private function addVersion($version,$idmodele,$dated,$datef){
+  $obj = new categoriesModel();
+  $r= $obj->addVersion($version,$idmodele,$dated,$datef);
+  return $r;
+}
+private function getVersion($version,$modele){
+  $obj = new categoriesModel();
+  $r= $obj->getVersion($version,$modele);
+  return $r;
+}
+private function addDVehicule($data,$modele,$version){
+  $obj = new categoriesModel();
+  $r= $obj->addDVehicule($data,$modele,$version);
+  return $r;
+}
+private function addCaracV($idv,$idcarac,$valeur){
+  $obj = new categoriesModel();
+  $r= $obj->addCaracV($idv,$idcarac,$valeur);
+  return $r;
+}
+
+public function addDataVehicule($data){
+  $obj = new categoriesModel();
+  $modele;
+  $version;
+  var_dump($data);
+  if($data["modeleadd"]=="true"){
+    $modele= $this->addModele($data["nommodele"],$data["idmarque"]);
+  }else{
+    $modele=$this->getModele($data["nommodele"],$data["idmarque"]);
+  }
+  if($data["versionadd"]=="true"){
+    $version= $this->addVersion($data["nomversion"],$modele,$data["datedebut"],$data["datefin"]);
+  }else{
+    $version=$this->getVersion($data["nomversion"],$modele);
+  }
+  $r = $this->addDVehicule($data,$modele,$version);
+  foreach($data["caract"] as $carac){
+    if($carac["valeur"]!==''){
+    $this->addCaracV($r,$carac["idcarac"],$carac["valeur"]);}
+  }
+  echo $r;
+}
 
 
 

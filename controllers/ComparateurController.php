@@ -26,7 +26,7 @@ class comparateurController{
         $pairs=[];
         $vehicules=count($ids);
         for($i=0;$i<$vehicules;$i++){
-            for($j=$i+1;$j<$vehicules;$j++){
+            for($j=$i+1;$j<$vehicules;$j++){ 
                 $pairs[]=[$ids[$i],$ids[$j]];
             }
         }

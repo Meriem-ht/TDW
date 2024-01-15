@@ -216,7 +216,7 @@ public function NavbarAdmin(){
         <div class="marques">
         <?php
         foreach ($marques as $marque) {
-            echo '<div class="marque-box"><a href="index.php?router=marque&'. $marque['id_marque'] .'"><img src="'. $marque['url'] .'"/></a></div>';
+            echo '<div class="marque-box"><a href="index.php?router=Marque&id='. $marque['id_marque'] .'"><img src="'. $marque['url'] .'"/></a></div>';
         }
         ?>
         </div>
@@ -698,7 +698,6 @@ $(".comparer").submit((e)=>{
 
 })
 
-    
 
 
 
@@ -771,7 +770,7 @@ if($avislist.length==0){
                 $globalcontainer.empty();
                $globalcontainer.append(nocomment);
             }else{
-let containeravis = $('<div class="container-avis"></div>');
+        let containeravis = $('<div class="container-avis"></div>');
         $.each($avislist,(index, avis) => {
         let boxavis=$('<div class="box-avis"></div>');
         let infoavis=$('<div class="info-avis"></div>');
@@ -854,13 +853,22 @@ $.ajax({
                 const avistoshow=avisall.slice(debut,fin)
                 createcontaineravis(avistoshow,globalcontainer) 
                 } 
+                let prev=$('<button  class="voirplus-btn avis-btn ml-5">Previous</button>');
+                let next=$('<button  class="voirplus-btn  avis-btn">Next</button>');
+                $(".tousavis-container").append(prev);
+                $(".tousavis-container").append(next);
                 renderavis(0);
                 let debut= 5 ; 
-                setInterval(()=>{
+                next.click(()=>{
                     renderavis(debut);
                     debut +=5;
                     if(debut>=avisall.length){debut=0}
-                    },5000)
+                    })
+                prev.click(()=>{
+                renderavis(debut);
+                debut -=5;
+                if(debut<0){debut=0}
+                })
                 }}, 
         error:(error)=>{
             console.log(error.message);//si error en affiche l'erreur 
@@ -1019,6 +1027,7 @@ function getDiapo(){
     data: {},
     success: (res) => {
         $result=JSON.parse(res);
+        console.log($result);
         if($result !== undefined){
             var alldiapo=$result;
             function renderdiapo(debut){
@@ -1029,12 +1038,11 @@ function getDiapo(){
                 let title=$('<h1 class="diapo-title"></h1>').text(diapotoshow[0].title);
                 let img=$(`<img src='${diapotoshow[0].url}' >`);
                 let link;
-                if (diapotoshow[0].idnews !== null){
-                    link=$(`<a href="index.php?router=NewsDetail&id=${diapotoshow[0].idnews}"> </a>`);
+                if (diapotoshow[0].id_news !== null){
+                    link=$(`<a href="index.php?router=NewsDetail&id=${diapotoshow[0].id_news}"> </a>`);
                 }else{
                     link=$(`<a href="${diapotoshow[0].href}"> </a>`);
                 }
-                console.log(link);
                 diapoContainer.empty();
                 cover.append(title);
                 link.append(cover);
@@ -1046,7 +1054,7 @@ function getDiapo(){
                     renderdiapo(debut);
                     debut +=1;
                     if(debut>=alldiapo.length){debut=0}
-                    },5000*60*60)
+                    },5000)
                 }}, 
         error:(error)=>{
             console.log(error.message);//si error en affiche l'erreur 
@@ -1137,15 +1145,62 @@ $("#form-marque-add").submit((e)=>{
             });
 })
 /*----------------------------------------------------------------------*/
+var modeleadd=false;
+var versionadd=false;
+$(".modeleadd").click((e)=>{
+    modeleadd=true});
+$(".versionadd").click((e)=>{
+    versionadd=true});
+
+$("#form-vehicule-add").submit((e)=>{
+    let caract = [];
+$("input[name='caracvehicule[]']").each(function () {
+    caract.push({
+        idcarac: $(this).data("value"),
+        valeur: $(this).val()
+    });
+    console.log("fom"+ $(this));
+});
+
+  e.preventDefault();
+  const data={
+        idmarque:$("#marquevadd").val(),
+        nommodele:$("#modelevadd").val(),
+        nomversion:$("#versionvadd").val(),
+        datedebut:$("#datedebut").val(),
+        datefin:$("#datefin").val(),
+        pop:$("#popvadd").val(),
+        types:$("input[name='typevehicule']").val(), 
+        versionadd:versionadd,
+        modeleadd:modeleadd,
+        caract:caract,
+      }
+  $.ajax({
+                url: "index.php?router=addDataVehicule",
+                method: "POST",
+                data: data,
+                success: (res) => {
+                    console.log(res);
+                    //  location.replace("index.php?router=categories");
+                },
+            });
+})
+/*----------------------------------------------------------------------*/
 
 });
+function setItem(id,name){
+    localStorage.setItem(name,id);
+}
+
+
+
 function createtablevehicule(id){
     $.ajax({
     url: `index.php?router=getdatavehicule`,
     method: "GET",
     data: {id:id},
     success: (res) => {
-        console.log(res);
+        let addBtn;
         tableContainer=$(".gestion-table");
                 resdata=JSON.parse(res);
                 console.log(resdata);
@@ -1178,6 +1233,7 @@ function createtablevehicule(id){
                     tr.append(td);});
                     let td = $('<td class="option"></td>');
                     let deleteBtn = $('<a href="index.php?router=deletevehicule&id=' + row[0].valeur + '">Delete</a>');
+                    addBtn=$('<a href="index.php?router=addvehicule&id=' + row[1].valeur + '">Ajouter  Véhicule</a>'); 
                     td.append(deleteBtn);
                     tr.append(td);
                     tbody.append(tr);
@@ -1187,8 +1243,7 @@ function createtablevehicule(id){
                  tableContainer.empty();
                  tableContainer.append(table);
                 let tabledata = new DataTable(table);
-                let end=$('<div class="flex-end add-btn"> </div>');
-                let addBtn ;
+                let end=$('<div class="flex-end add-btn"></div>');
                 tableContainer.append(tabledata);
                 end.append(addBtn);
                 tableContainer.append(end);
@@ -1225,14 +1280,14 @@ function createtable(category,id){
                     let td;
                     if(category=="news" && i==2){
                     let value = col.valeur.substring(0, 200);
-                    let showmore=$('<button> show more </button>');
+                    let showmore=$('<button class="voirplus-btn"> show more </button>');
                     td=$('<td> </td>').text(value);
                     td.append(showmore);
 
                     showmore.click(()=>{
                         td.empty();
                         td.text(valeur);
-                        let showless=$('<button> show less </button>');
+                        let showless=$('<button class="voirplus-btn"> show less </button>');
                            showless.click(()=>{
                             td.empty();
                             td.text(value);
@@ -1260,7 +1315,7 @@ function createtable(category,id){
                     let validerBtn = $('<a href="index.php?router=valider' + category + '&id=' + row[0].valeur + '">Valider</a>');
                     let profileBtn = $('<a href="index.php?router=UserProfile&id=' + row[0].valeur + '">Profile</a>');
                     let updateBtn=$('<a href="index.php?router=update' + category + '&id=' + row[0].valeur + '">Update</a>');
-                    let vehiculeBtn=$('<button>Voir Véhicules</button>');
+                    let vehiculeBtn=$('<button class="voirplus-btn">Voir Véhicules</button>');
                     vehiculeBtn.click(()=>{
                         createtablevehicule(row[0].valeur);
                     })

@@ -202,12 +202,12 @@ if (isset($_GET['router'])){
             break;
         case 'affichernews':
             $r=new categoriesController();
+            $r->afficherNews($_GET["id"]);
+            break;
+        case 'updatenews':
+            $r=new categoriesController();
             $r->updateNews($_GET["id"]);
             break;
-        // case 'updatenews':
-        //     $r=new categoriesController();
-        //     $r->updateNews($_GET["id"]);
-        //     break;
         case 'updateDatanews':
             $r=new categoriesController();
             $r->updateDataNews($_POST["idnews"],$_POST["tnews"],$_POST["textenews"],$_POST["affichernews"],$_POST["statunews"]);
@@ -260,10 +260,10 @@ if (isset($_GET['router'])){
             $r=new categoriesController();
             $r->updateDataMarque($_POST);
             break;
-           case 'addDataMarque':
-            $r=new categoriesController();
-            $r->addDataMarque($_POST);
-            break;
+        case 'addDataMarque':
+        $r=new categoriesController();
+        $r->addDataMarque($_POST);
+        break;
         case 'addmarque':
             $r=new categoriesController();
             $r->addMarque();
@@ -275,6 +275,14 @@ if (isset($_GET['router'])){
         case 'deletevehicule':
             $r=new categoriesController();
             $r->deleteVehicule($_GET["id"]);
+            break;
+        case 'addvehicule':
+            $r=new categoriesController();
+            $r->addVehicule($_GET["id"]);
+            break;
+        case 'addDataVehicule':
+            $r=new categoriesController();
+            $r->addDataVehicule($_POST);
             break;
             
         

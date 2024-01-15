@@ -63,7 +63,8 @@ class vehiculeView{
                     }
                  ?>
             <div class="flex-end">
-            <a href="index.php?router=Comparateur&id=<?php echo $idvehicule?>">Comparer avec d'autre véhicule<i class="fa-solid fa-chevron-right"></i></a>
+            <a href="index.php?router=Comparateur" click='setItem(v1,<?php echo $idvehicule ?>)' >Comparer avec d'autre véhicule<i class="fa-solid fa-chevron-right"></i></a>
+
             </div>
             </div>
         </div>

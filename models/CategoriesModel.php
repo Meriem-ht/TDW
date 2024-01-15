@@ -236,7 +236,7 @@ class categoriesModel{
    public function getDataVehicule($idmarque){
     $obj= new connexion();
     $c=$obj->connect();
-    $query="SELECT v.idvehicule ,m.nom as marque ,ve.nom as version ,mo.nom as modele ,ve.datedebut as Année_Début , ve.datefin as Date_Fin ,v.statutvehicule as Statut,v.estprincipale as Principale 
+    $query="SELECT v.idvehicule ,m.idmarque as Id_Marque ,m.nom as marque ,ve.nom as version ,mo.nom as modele ,ve.datedebut as Année_Début , ve.datefin as Date_Fin ,v.statutvehicule as Statut,v.estprincipale as Principale 
     FROM vehicule v
     JOIN marque m ON m.idmarque=v.id_marque
     JOIN modele mo ON mo.idmodele=v.id_modele
@@ -268,7 +268,97 @@ class categoriesModel{
     $obj->disconnect($c);
     return $r; 
   }
+  public function getcarac(){
+    $obj = new connexion();
+    $c = $obj->connect();
+    $query = "SELECT * from caract";   
+    $qtf = $c->prepare($query);
+    $qtf->execute();
+    $r = $qtf->fetchAll(PDO::FETCH_ASSOC);
+    $obj->disconnect($c);
+    return $r; 
+  }
+  public function addDVehicule($data,$idmodele,$idversion){
+    $obj = new connexion();
+    $c = $obj->connect();
+    $query = "INSERT INTO  vehicule (estprincipale,id_marque,id_modele,id_version,id_type) VALUES(?,?,?,?,?)";  
+    $qtf = $c->prepare($query);  
+    $qtf->bindParam(1, $data["pop"]);
+    $qtf->bindParam(2, $data["idmarque"]);
+    $qtf->bindParam(3, $idmodele);
+    $qtf->bindParam(4, $idversion);
+    $qtf->bindParam(5,$data["types"]);
+    $qtf->execute();
+    $lastid = $c->lastInsertId();
+    $obj->disconnect($c);
+    return $lastid; 
+ }
+ public function addModele($nom,$idmarque){
+  $obj = new connexion();
+  $c = $obj->connect();
+  $query = "INSERT INTO  modele (nom,id_marque) VALUES(?,?)";  
+  $qtf = $c->prepare($query);  
+  $qtf->bindParam(1,$nom);
+  $qtf->bindParam(2,$idmarque);
+  $r=$qtf->execute();
+  $lastid = $c->lastInsertId();
+  $obj->disconnect($c);
+  return $lastid; 
+ }
+ public function addVersion($nom,$idmodele,$debut,$fin){
+  $obj = new connexion();
+  $c = $obj->connect();
+  $query = "INSERT INTO  vers (nom,datedebut,datefin,id_modele) VALUES(?,?,?,?)";  
+  $qtf = $c->prepare($query);  
+  $qtf->bindParam(1,$nom);
+  $qtf->bindParam(2,$idmodele);
+  $qtf->bindParam(3,$debut);
+  $qtf->bindParam(4,$fin);
+  $r=$qtf->execute();
+  $lastid = $c->lastInsertId();
+  $obj->disconnect($c);
+  return $lastid; 
+ }
+ public function getModele($nom,$idmarque){
+  var_dump($nom,$idmarque);
+  $obj = new connexion();
+  $c = $obj->connect();
+  $query = "SELECT idmodele FROM  modele WHERE nom=? AND id_marque= ?";  
+  $qtf = $c->prepare($query);  
+  $qtf->bindParam(1,$nom);
+  $qtf->bindParam(2,$idmarque);
+  $qtf->execute();
+  $r = $qtf->fetch(PDO::FETCH_ASSOC);
+  $obj->disconnect($c);
+  if($r) {return $r['idmodele'];}
+  else {return false;}
+ }
+ public function getVersion($nom,$idmodele){
+  $obj = new connexion();
+  $c = $obj->connect();
+  $query = "SELECT idversion FROM  vers WHERE nom=? AND id_modele= ?";  
+  $qtf = $c->prepare($query);  
+  $qtf->bindParam(1,$nom);
+  $qtf->bindParam(2,$idmodele);
+  $qtf->execute();
+  $r = $qtf->fetch(PDO::FETCH_ASSOC);
+  $obj->disconnect($c);
+  if($r) {return $r['idversion'];}
+  else {return false;}
+ }
 
+ public function addCaracV($idv,$idcarac,$valeur){
+  $obj = new connexion();
+  $c = $obj->connect();
+  $query = "INSERT INTO caract_vehicule (id_vehicule,id_caract,valeur) VALUES(?,?,?)";  
+  $qtf = $c->prepare($query);  
+  $qtf->bindParam(1,$idv);
+  $qtf->bindParam(2,$idcarac);
+  $qtf->bindParam(3,$valeur);
+  $r=$qtf->execute();
+  $obj->disconnect($c);
+  return $r; 
+ }
 
 
 }

@@ -9,7 +9,7 @@ class avisModel{
         EXISTS(SELECT * from likeavis WHERE likeavis.id_user= :user AND likeavis.id_avis = v.idavis ) as userlike
         FROM avis v
         JOIN user u ON v.id_user = u.iduser 
-        WHERE v.estmarque =:ismarque  AND $entity = :iden AND v.statut = :statu AND  u.statutuser='Inscrit' ";
+        WHERE v.estmarque =:ismarque  AND $entity = :iden AND v.statut = :statu ";
     
     
         $qtf = $c->prepare($query);
