@@ -1065,7 +1065,6 @@ function getmarqueVehicules($idmarque,$avis){
         idmarque:$idmarque,
      } ,
     success: (res) => {
-        if(res.trim() !== ""){
        const vehicules=JSON.parse(res);
        let containervehicule = $('<div class="container-vehicule"></div>');
         $.each(vehicules,(index, vehicule) => {
@@ -1084,7 +1083,7 @@ function getmarqueVehicules($idmarque,$avis){
        let version=$('<p> </p>').html(vehicule.versionn);
        let rate=$('<div> </div>');
        let fav=$('<div class="favoris-icon" data-value="'+vehicule.idvehicule+'"> </div>');
-       let favicon=null;
+       let favicon=$('<p></p>');
        let id =vehicule.idvehicule;
         <?php if(isset($_SESSION["userName"])){ ?>
             if(vehicule.userfavoris =='1' && id !== 0 ){
@@ -1093,7 +1092,10 @@ function getmarqueVehicules($idmarque,$avis){
         else
         if(vehicule.userfavoris =='0' && id !== 0){
             favicon = $('<i class="fa-regular fa-bookmark" data-value="'+vehicule.idvehicule+'"></i>');
-        }      
+        }   
+        else{
+            favicon = $('<p></p>');
+        }   
         <?php } ?>
        favicon.click(()=>handleFavoris(vehicule.idvehicule));
        getNote("false",id,rate);
@@ -1110,7 +1112,7 @@ function getmarqueVehicules($idmarque,$avis){
 /*-------------------------------------- ------------------------------*/
         });
        $(".vehicules-container").append(containervehicule);
-        }},
+        },
     error: function(error) {
           console.log(error.message);
         }  
