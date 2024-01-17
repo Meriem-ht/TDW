@@ -26,6 +26,7 @@ class avisView{
          
          echo '</div>';
      }
+     
      //Display Page of all marques for choose avis 
      public function Marquesavis(){
         ob_start();
@@ -34,6 +35,9 @@ class avisView{
         $content = ob_get_clean();
         require("layout.php");
      } 
+
+
+
      public function showmarquevehiculesavis($idmarque){
         ob_start();
         $r=new commonViews();
@@ -49,6 +53,8 @@ class avisView{
         $content = ob_get_clean();
         require("layout.php");
     }
+
+
     public function showvehiculsavis($idvehicule){
         $v=new vehiculeController();
         $vehicule=$v->getVehiculeById($idvehicule);

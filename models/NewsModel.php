@@ -1,6 +1,8 @@
 <?php
 require_once("ConnexionModel.php");
 class newsModel{
+
+  // Tous les news 
     public function getallNews(){
         $obj= new connexion();
         $c=$obj->connect();
@@ -19,7 +21,9 @@ class newsModel{
           $r = $qtf->fetchAll(PDO::FETCH_ASSOC);
         $obj->disconnect($c);
         return $r;
-      }
+      } 
+      //Détails d'une news 
+      
       public function getNews($idnews){
         $obj= new connexion();
         $c=$obj->connect();

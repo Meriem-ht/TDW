@@ -1,6 +1,7 @@
 <?php
 require_once("ConnexionModel.php");
 class typevModel{
+
     public function getTypev(){
         $obj= new connexion();
         $c=$obj->connect();
@@ -10,6 +11,8 @@ class typevModel{
         $obj->disconnect($c);
         return $r;
       }
+
+      //Selon la marque ajouter et les types choisi on ajoute c'est info dans la table marque_type
       public function inserttypemarque($idmarque,$idtype){
         $obj = new connexion();
         $c = $obj->connect();

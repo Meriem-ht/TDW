@@ -4,8 +4,11 @@ require_once("./controllers/SocialController.php");
 require_once("./controllers/MarqueController.php");
 require_once("./controllers/ModeleController.php");
 require_once("./controllers/TypevController.php");
+require_once("./controllers/ContactController.php");
 
 class commonViews{
+
+
     public function Social(){
         $r=new socialController();
         $socials=$r->getSocial(); 
@@ -15,6 +18,8 @@ class commonViews{
         }
        echo '</ul>';
     }
+
+
     public function Navbar(){
         ?>
         <div class="navbar">
@@ -24,7 +29,7 @@ class commonViews{
         <?php
          $this->Social();
          if(isset($_SESSION['userName'])){
-         echo '<button><a href="index.php?router=UserProfile"><i class="fa-solid fa-user" style="color: #000000;"></i></a></button>';
+         echo '<button><a href="index.php?router=UserProfile&id='.$_SESSION["userId"].'"><i class="fa-solid fa-user" style="color: #000000;"></i></a></button>';
          echo '<button class="logout"><a href="index.php?router=UserLogout"><i class="fa-solid fa-right-from-bracket" style="color: #000000;"></i></a></button>';
          } else{
           echo '<button id="connecter-btn">Se Connecter</button>';
@@ -89,6 +94,9 @@ class commonViews{
     </div> 
     <?php
     }
+
+
+
     
 public function NavbarAdmin(){
     ?>
@@ -139,6 +147,9 @@ public function NavbarAdmin(){
         </ul>
         <?php
     }
+
+
+
     public function ComparSection(){
         $r1=new typevController();
         $types=$r1->getTypev();
@@ -149,7 +160,7 @@ public function NavbarAdmin(){
             <h2 class="heading-2">Choisir Véhicule</h2>
             <div class="close-btn"><i class="fa-solid fa-xmark" style="color: #000000;"></i></div>
             </div>
-            <form method="post" class="form-compar">
+            <form method="post" class="form-compar ">
                 <div class="form-item">
                 <label>Marque</label>
                 <select name="marquev" id='marquev'>     
@@ -175,7 +186,7 @@ public function NavbarAdmin(){
         </div>
         </div>
       
-        <section class="comparaison">
+        <section class="comparaison mt-4">
         <form method="POST" class="comparer">
         <div class="heading-box">
            <h1 class="heading">Véhicule Comparaison</h1>
@@ -188,18 +199,7 @@ public function NavbarAdmin(){
            </ul>
         </div>
         <div class="compar-box">
-            <?php 
-            for($i=0;$i<4;$i++){
-                echo '   <div class="compar-v">
-                <div class="compar-container">
-                <div class="add disabled" >
-                    +
-                </div>
-                <p>Choisir véhicule</p>
-                </div>
-            </div>';
-            }
-            ?>
+       
         </div>
         <div class="flex-center">
            <input type="submit" disabled class="submit-btn comparer-btn" value="Comparer">
@@ -208,6 +208,8 @@ public function NavbarAdmin(){
     </section>
         <?php
     }
+
+
     public function MarquePrincipale(){
         $r=new marqueController();
         $marques=$r->getMarquePrincipale();
@@ -254,6 +256,8 @@ public function NavbarAdmin(){
         </div>
         <?php } 
     }
+
+
     public function allavis($ismarque,$entity){
         ?>
         <div class="tousavis-container" isMarque="<?php echo $ismarque; ?>" data-value-review="<?php echo $ismarque && isset($entity["idmarque"]) ? $entity["idmarque"] : $entity; ?>">
@@ -262,6 +266,10 @@ public function NavbarAdmin(){
         </div>
         <?php
     }
+
+
+
+
     public function avis($ismarque,$entity){
         ?>
     <div class="avis" isMarque="<?php echo $ismarque; ?>" data-value-review="<?php echo $ismarque && isset($entity["idmarque"]) ? $entity["idmarque"] : $entity; ?>">
@@ -283,6 +291,9 @@ public function NavbarAdmin(){
 
         <?php
     }
+
+
+
     public function Footer(){
         ?>
 
@@ -302,6 +313,9 @@ public function NavbarAdmin(){
         <?php
     }
 
+
+
+
  public function script(){  
     ?>
     <script src="./jquery-3.6.0.js"></script>
@@ -310,7 +324,6 @@ public function NavbarAdmin(){
 $(document).ready(() => { 
     let vehiculesmarque=$(".vehicules-container").attr("data-value");
     let avisvehicules=$(".vehicules-container").attr("avis");
-    console.log("this one"+avisvehicules);
     let marquerating=$("#marque-info");
     getmarqueVehicules(vehiculesmarque,avisvehicules);
     getBestReview();// les avis appréciés
@@ -318,8 +331,10 @@ $(document).ready(() => {
     getNote("true",marquerating.attr("data-value"),marquerating);
     getRate();//GET RATE OF AN USER ;
     getDiapo();
-//     // Login et Signup 
-//     //Handle login form 
+
+
+
+    /* --------------------------------Login& Sign up---------------------------------------- */
     const conBtn=$("#connecter-btn");
     const seconnecter=$(".connecter button");
     const inscrire=$(".inscrire button");
@@ -330,7 +345,7 @@ $(document).ready(() => {
     $(".form-loginad").prepend(loginmessage);
 
 
-
+    //Gestion de POPUP
     conBtn.click(()=>{
         $(".popup-login").show();
         $(".popup-login-bg").show();
@@ -347,6 +362,19 @@ $(document).ready(() => {
         $(".popup-login").hide();
         $(".popup-signup").show();
     })
+    
+$(".close-btn").click(() => {
+    $(".popup-select").hide();
+    $(".popup-login").hide();
+    $(".popup-signup").hide();
+    $(".popup-login-bg").hide();
+    $(".popup-loginad-bg").hide();
+    $(".popup-loginad").hide();
+    $(".popup-bg").hide();
+
+});
+
+    //REQUEST SIGN UP 
     $(".form-signup").submit((e)=>{
         e.preventDefault();
       const data={
@@ -366,7 +394,6 @@ $(document).ready(() => {
                 const mes=$('<p>'+res.message+'</p>');
                 registermessage.empty();
                 registermessage.append(mes);
-                console.log(res.message)
                 if(res.status=="success"){
                   registermessage.css({'color':'green','font-weight':'bold'});
                   registermessage.fadeIn(function(){
@@ -379,6 +406,12 @@ $(document).ready(() => {
                     registermessage.css({'color':'red','font-weight':'bold'});
                     registermessage.fadeIn(function(){
                      registermessage.delay(2000).fadeOut(); 
+                     $("#nom").val('');
+                    $("#prenom").val('');
+                    $("#username").val('');
+                    $("#date").val('');
+                    $("#sexe").val('');
+                    $("#password").val(''); 
                     });
                 }
                 },
@@ -388,6 +421,9 @@ $(document).ready(() => {
      
         });
     });
+
+
+    //REQUEST LOGIN 
     $(".form-login").submit((e)=>{
         e.preventDefault();
         $.ajax({
@@ -401,7 +437,6 @@ $(document).ready(() => {
             const mes=$('<p>'+res.message+'</p>');
             loginmessage.empty();
             loginmessage.append(mes);
-            console.log(res.message)
             if(res.status=="success"){
             location.reload();
             }else {
@@ -418,6 +453,8 @@ $(document).ready(() => {
 });
 
 
+
+//REQUEST LOGIN ADMIN 
 $(".form-loginad").submit((e)=>{
         e.preventDefault();
         $.ajax({
@@ -446,9 +483,13 @@ $(".form-loginad").submit((e)=>{
         });
 });
 
+
+/* --------------------------------END Login& Sign up---------------------------------------- */
+
+/* --------------------------------Comparaison---------------------------------------- */
    
     let typeid=1;
-    let selectedBox=0;
+    var selectedBox=0;
     let selectedIDs=[];
     let selectedTypes=[];
     const marqueSelect = $("#marquev");
@@ -456,38 +497,90 @@ $(".form-loginad").submit((e)=>{
     const annvSelect = $("#annv");
     const versionSelect = $("#versionv");
 
-
-    function equalArrayEle(table){
-        for($i=0;$i<table.length;$i++){
-            for($j=$i+1;$j<table.length;$j++){
-                if(table[$i] !== table[$j]) return false;
-            }
+  //Fonction qui permet de comparer entre les élements d'un tableau 
+    function equalArrayEle(table) {
+    for (let i=0; i <table.length; i++) {
+        for (let j=i+1; j< table.length; j++) {
+            if(table[i]===table[j]) return true;
         }
-     return true;
     }
+    return false;
+}
+        // Get from local Storage a vehicule 
+        let selectedVehicule=JSON.parse(localStorage.getItem('selectedVehicule'));
+        if (!selectedVehicule){
+        //If not selected then display 4 véhicules 
+        for(i=0;i<4;i++){
+        let comparV=$('<div class="compar-v" data="'+i+'"></div>');
+        let comparContainer=$('<div class="compar-container"> </div>');
+        let addVehicule;
+        if(i==0){
+            addVehicule=$('<div class="add"> + </div>');}
+            else{
+            addVehicule=$('<div class="add disabled"> + </div>');
+            }
+        let choisirVehicule=$('<p >  </p>').text("Choisir Véhicule");
+        comparContainer.append(addVehicule);
+        comparContainer.append(choisirVehicule);
+        comparV.append(comparContainer);
+        $(".compar-box").append(comparV);}
+        }else{
 
+            //Display the selected vehicule and 3 boxes 
+            selectedIDs[0]=selectedVehicule.id;
+            selectedTypes[0]=selectedVehicule.idtype;
+            var boxv1=$('<div class="boxv"></div>');
+            var imgv1=$('<div class="img-v"><img src="'+selectedVehicule.url+'"/></div>');
+            var cmprv=$('<div class="compar-v" data="'+0+'"></div>');
+            var info1=$('<div class="info-v"></div>');
+            var marquemodele1=$('<p>'+selectedVehicule.marque+' '+selectedVehicule.modele+'</p>');
+            var version1=$('<p>'+selectedVehicule.version+'</p>');
+            selectedBox++;
 
-    $(".add").eq(0).removeClass("disabled");
+            $(".popup-select").hide();
+            $(".popup-bg").hide();
+            info1.append(marquemodele1);
+            info1.append(version1);
+            boxv1.append(imgv1);
+            boxv1.append(info1);
+            cmprv.append(boxv1);
+            $(".compar-box").append(boxv1);
 
+            
 
-    $(".types li:first-child").addClass("selected");
+        for(i=1;i<4;i++){
+        let comparV=$('<div class="compar-v" data="'+i+'" ></div>');
+        let comparContainer=$('<div class="compar-container"> </div>');
+        let addVehicule;
+        if(i==1){
+            addVehicule=$('<div class="add" > + </div>');}
+            else{
+            addVehicule=$('<div class="add disabled" > + </div>');
+            }
+        let choisirVehicule=$('<p >  </p>').text("Choisir Véhicule");
+        comparContainer.append(addVehicule);
+        comparContainer.append(choisirVehicule);
+        comparV.append(comparContainer);
+        $(".compar-box").append(comparV);}
+        localStorage.removeItem('selectedVehicule');  
+        }
+        //Le type choisi par defaut c'est vehicule  
+            $(".types li:first-child").addClass("selected");
+        //Choisir un type et le mettre dans variable typeid 
+            $(".types li").click((e)=>{
 
-    $(".types li").click((e)=>{
-
-        $(".types li").removeClass("selected");
-        $(e.target).addClass("selected");
-        typeid= $(e.target).attr('id') ;
-        console.log(typeid);
-    })
+                $(".types li").removeClass("selected");
+                $(e.target).addClass("selected");
+                typeid= $(e.target).attr('id') ;
+            })
 
 
      //Lister les marques selon le choix de la type de véhicule 
      $(".add").click((e) => {
-        selectedBox= $(".add").index($(e.target));
-        if (!($(".add").eq(selectedBox).hasClass("disabled"))) {
+        selectedBox = $(".add").index(e.target);
+        if (!$(e.target).hasClass("disabled")) {
         $(".popup-select").show();
-        $(".popup-bg").show();
-    
+        $(".popup-bg").show();   
             $.ajax({
                 url: "index.php?router=Marquesall",
                 method: "POST",
@@ -495,6 +588,7 @@ $(".form-loginad").submit((e)=>{
                 success: (data) => {
                     try{
                 var marques = JSON.parse(data);
+                //Cà en cas ou il choisir marque modele ensuite il refaire le choix de marque 
                 marqueSelect.empty();
                 marqueSelect.append('<option selected disabled>Choisir</option>');
                 modeleSelect.empty();
@@ -580,7 +674,7 @@ modeleSelect.change(() => {
     });     
 });
 
-
+//Les versions selon l'année choisi
 annvSelect.change(() => {
     $.ajax({
         url: "index.php?router=Versions",
@@ -597,20 +691,9 @@ annvSelect.change(() => {
         }
     });    
 });
+//Lorsque il choisir marque ,modele,version ,année on enleve disabled from button submit 
 versionSelect.change(() => {
         $('.form-compar input[type="submit"]').removeAttr("disabled");
-});
-
-
-$(".close-btn").click(() => {
-    $(".popup-select").hide();
-    $(".popup-login").hide();
-    $(".popup-signup").hide();
-    $(".popup-login-bg").hide();
-    $(".popup-loginad-bg").hide();
-    $(".popup-loginad").hide();
-    $(".popup-bg").hide();
-
 });
 
 
@@ -625,16 +708,17 @@ $(".form-compar").submit((e)=>{
                 versionid: versionSelect.val()
                 },
                 success: (data) => {
+                try{
                 var vehicule = JSON.parse(data)[0];
-                selectedIDs[selectedBox]=vehicule.idvehicule;
-                selectedTypes[selectedBox]=vehicule.id_type;
+                selectedIDs[selectedBox]=vehicule.idvehicule;//Enregister dans cette tables les ids pour faire la comparaison
+                selectedTypes[selectedBox]=vehicule.id_type;//Enregister dans cette tables les types pour faire la comparaison
+
+                //Création et append de box qui va contenir l'img +info de véhicule
                 var boxv=$('<div class="boxv"></div>');
                 var imgv='<div class="img-v"><img src="'+vehicule.url+'"/></div>';
                 var info=$('<div class="info-v"></div>');
                 var marquemodele=$('<p>'+vehicule.marquen+' '+vehicule.modelen+'</p>');
                 var version=$('<p>'+vehicule.versionn+'</p>');
-
-
                 $(".popup-select").hide();
                 $(".popup-bg").hide();
                 $(".compar-container").eq(selectedBox).hide();
@@ -642,15 +726,23 @@ $(".form-compar").submit((e)=>{
                 info.append(version);
                 boxv.append(imgv);
                 boxv.append(info);
-                $(".compar-v").eq(selectedBox).append(boxv);
-                $(".add").eq(selectedBox+1).removeClass("disabled");
+                $(".compar-v:eq("+selectedBox+")").append(boxv);
+                $(".add").eq(selectedBox+1).removeClass("disabled");//Enlevez disabled from next box 
+                //Si 2 choisi et pas égaux donc on peut faire la comparaison
                 if (selectedIDs.length>=2 && equalArrayEle(selectedTypes) && !equalArrayEle(selectedIDs)){
                     $('.comparer input[type="submit"]').removeAttr("disabled");
                 }
+                // selectedBox++;
                 }
+                catch(error){
+                console.log(error.message);
+            }
+            },
             });
 })
 $(".comparer").submit((e)=>{
+//Toujours en commence par la vérification de ids et types 
+ if(equalArrayEle(selectedTypes) && !equalArrayEle(selectedIDs)){ 
   e.preventDefault();
   $.ajax({
                 url: "index.php?router=addCompar",
@@ -659,10 +751,9 @@ $(".comparer").submit((e)=>{
                 vehiculesIds:selectedIDs,
                 },
                 success: (data) => {
-                    console.log(data);
+                    try{
                 tableContainer=$(".table-compar");
                  resdata=JSON.parse(data);
-                 console.log(resdata);
                 const table=$('<table  border="1"> </table>');
                 const thead=$('<thead> </thead>');
                 const tr=$('<tr> </tr>');
@@ -693,10 +784,16 @@ $(".comparer").submit((e)=>{
                 table.append(thead);
                 table.append(tbody);
                 tableContainer.append(table);
-            },
-        });
+            }catch(err){
+                console.log(err.message);
+            }
+        }
+        });}
 
-})
+else{
+   e.preventDefault(); 
+   alert("Choisir différents véhicles pour comparison");
+}})
 
 
 
@@ -722,21 +819,20 @@ $(".form-avis").submit((e)=>{
    });
 });
 
-// Afficher heart rempli ou vide selon la click de user 
-//passer id de l'avis et liked boolean pour savoir si c'est like ou unlike 
-function updateiconlike(idavis,liked){
-    console.log(liked);
-    //Sélectionner l'icon de avis précis (selon idavis )
-    const icon=$('.likebtn[data-value='+idavis+'] i');
-    if(liked == '1' && idavis !="null"){
-        icon.removeClass("fa-regular");//regular sa veut dire empty 
-        icon.addClass("fa-solid");//solid heart rempli 
-    }
-    else if(liked == '0' && idavis !="null"){
-        icon.removeClass("fa-solid");
-        icon.addClass("fa-regular");
-    }
-}
+        // Afficher heart rempli ou vide selon la click de user 
+        //passer id de l'avis et liked boolean pour savoir si c'est like ou unlike 
+        function updateiconlike(idavis,liked){
+        //Sélectionner l'icon de avis précis (selon idavis )
+        const icon=$('.likebtn[data-value='+idavis+'] i');
+        if(liked == '1' && idavis !="null"){
+            icon.removeClass("fa-regular");//regular sa veut dire empty 
+            icon.addClass("fa-solid");//solid heart rempli 
+        }
+        else if(liked == '0' && idavis !="null"){
+            icon.removeClass("fa-solid");
+            icon.addClass("fa-regular");
+        }
+        }
 
 
 function getBestReview(){
@@ -750,89 +846,89 @@ function getBestReview(){
             idEntity:$(".avis").attr("data-value-review"),
         },
         success: (res) => {
-            console.log("this"+res);
+            if(res.trim() !== ""){
             $result=JSON.parse(res);
             if($result.status == "success"){
                 var avisall=$result.data;
                 createcontaineravis(avisall,globalcontainer);
-                        }
-                    
-                    } , 
+                }
+               }} , 
             error:(error)=>{
                 console.log(error.message);
             } ,   
         }); 
 }
-function createcontaineravis($avislist,$globalcontainer){
-var id=<?php if(isset($_SESSION['userId'])){echo $_SESSION['userId'];} else{echo "0";} ?>;
-if($avislist.length==0){
-                let nocomment=$('<div></div>').text("Y'a pas des avis pour le moment");
-                $globalcontainer.empty();
-               $globalcontainer.append(nocomment);
-            }else{
-        let containeravis = $('<div class="container-avis"></div>');
-        $.each($avislist,(index, avis) => {
-        let boxavis=$('<div class="box-avis"></div>');
-        let infoavis=$('<div class="info-avis"></div>');
-        let dateavis=$('<p></p>').text(avis.date);
-        let useravis=$('<p></p>').text(avis.nom +' '+ avis.prenom);
-        let commentavis=$('<div class="comment"></div>').text(avis.commentaire);
-        let center=$('<div class="flex-end"></div>')
-        //selon si user actuelle (ce qui est connecté ) si userlike donc heart déja rempli sinon heart vide 
-        if(avis.userlike =='1' && id !== 0 ){
-            likebtn=$('<div class="likebtn" data-value='+avis.idavis+'><i class="fa-solid fa-heart" ></i></div>');
-        }
-        else
-        if(avis.userlike =='0' && id !== 0){
-        likebtn=$('<div class="likebtn" data-value='+avis.idavis+'><i class="fa-regular fa-heart" ></i></div>');
-        }
-        else {
-            likebtn=$('<div class="likebtn" data-value="' + null + '" ><i class="fa-regular fa-heart" ></i></div>');
-        }
-        
-        //si on click sur le button on va updater database par les changements de like unlike 
-        likebtn.click(()=>{
-        handlelike(avis.idavis);});
-        //append les élements de l'avis pour les affichers (dynamiquement )
-        infoavis.append(dateavis);
-        infoavis.append(useravis);
-        boxavis.append(infoavis);
-        boxavis.append(commentavis);
-        center.append(likebtn);
-        boxavis.append(center);
-        containeravis.append(boxavis);//container contient tous les avis 
-        });
-        $globalcontainer.empty();
-        $globalcontainer.append(containeravis);
-    }      
-}
+
+    function createcontaineravis($avislist,$globalcontainer){
+        var id=<?php if(isset($_SESSION['userId'])){echo $_SESSION['userId'];} else{echo "0";} ?>;
+        if($avislist.length==0){
+                    let nocomment=$('<div></div>').text("Y'a pas des avis pour le moment");
+                    $globalcontainer.empty();
+                    $globalcontainer.append(nocomment);
+        }else{
+            let containeravis = $('<div class="container-avis"></div>');
+            $.each($avislist,(index, avis) => {
+            let boxavis=$('<div class="box-avis"></div>');
+            let infoavis=$('<div class="info-avis"></div>');
+            let dateavis=$('<p></p>').text(avis.date);
+            let useravis=$('<p></p>').text(avis.nom +' '+ avis.prenom);
+            let commentavis=$('<div class="comment"></div>').text(avis.commentaire);
+            let center=$('<div class="flex-end"></div>')
+            //selon si user actuelle (ce qui est connecté ) si userlike donc heart déja rempli sinon heart vide 
+            if(avis.userlike =='1' && id !== 0 ){
+                likebtn=$('<div class="likebtn" data-value='+avis.idavis+'><i class="fa-solid fa-heart" ></i></div>');
+            }
+            else
+            if(avis.userlike =='0' && id !== 0){
+            likebtn=$('<div class="likebtn" data-value='+avis.idavis+'><i class="fa-regular fa-heart" ></i></div>');
+            }
+            else {
+                likebtn=$('<div class="likebtn" data-value="' + null + '" ><i class="fa-regular fa-heart" ></i></div>');
+            }
+            
+            //si on click sur le button on va updater database par les changements de like unlike 
+            likebtn.click(()=>{
+            handlelike(avis.idavis);});
+            //append les élements de l'avis pour les affichers (dynamiquement )
+            infoavis.append(dateavis);
+            infoavis.append(useravis);
+            boxavis.append(infoavis);
+            boxavis.append(commentavis);
+            center.append(likebtn);
+            boxavis.append(center);
+            containeravis.append(boxavis);//container contient tous les avis 
+            });
+            $globalcontainer.empty();
+            $globalcontainer.append(containeravis);
+        }      
+    }
 
 
-function handlelike(idavis){
-    if (idavis !="null"){
-    $.ajax({
-        url: "index.php?router=Like",
-        method: "POST",
-        data: {
-            idavis:idavis,
-        },
-        success: (res) => {
-            $result=JSON.parse(res);
-                if($result.status == "like"){
-                updateiconlike(idavis,true);
+    function handlelike(idavis) {
+    if (idavis !== null) {
+        $.ajax({
+            url: "index.php?router=Like",
+            method: "POST",
+            data: {
+            idavis: idavis,
+            },
+            success: (res) => {
+                if(res.trim() !== ""){
+                $result = JSON.parse(res);
+                if ($result.status == "like") {
+                    updateiconlike(idavis, true);
+                } else if ($result.status == "unlike") {
+                updateiconlike(idavis, false);
                 }
-            else if($result.status == "unlike"){
-                updateiconlike(idavis,false);
-                    }
-            } , 
-            error:(error)=>{
-                console.log(error.message);
-            } ,   
-        }); } 
-        else {
+            }},
+            error: (error) => {
+            console.log(error.message);
+            },
+        });
+    } else {
         $(".popup-login").show();
         $(".popup-login-bg").show();
-        }
+    }
 }
 function getallavis(){
 var globalcontainer=$(".tousavis")
@@ -845,6 +941,7 @@ $.ajax({
         idEntity:$(".tousavis-container").attr("data-value-review"),
     },
     success: (res) => {
+        if(res.trim() !== ""){
         $result=JSON.parse(res);
         if($result.status == "success"){// Si success on va créer le container pour afficher tout les avis 
             var avisall=$result.data;
@@ -869,22 +966,23 @@ $.ajax({
                 debut -=5;
                 if(debut<0){debut=0}
                 })
-                }}, 
+                }}}, 
         error:(error)=>{
             console.log(error.message);//si error en affiche l'erreur 
         } ,   
     }); 
 }    
       
-
-        var ratinginput=$(".rating input");     
-         
-         function updateRating($rate){
-            $(".rating  label ").css("color","black");
-           for($i=0;$i<$rate;$i++){
-                 $(".rating  label").eq($i).css("color","red");
-              }
-         } 
+//Input pour rating (radio )
+var ratinginput=$(".rating input");     
+//Selon la note on colorer les icons 
+function updateRating($rate){
+        $(".rating  label ").css("color","black");
+        for($i=0;$i<$rate;$i++){
+        $(".rating  label").eq($i).css("color","red");
+        }
+ } 
+//Lors de chargement de document on get current rate d'un user 
 function getRate(){
     $.ajax({
                 url: "index.php?router=getUserRate",
@@ -894,13 +992,13 @@ function getRate(){
                     idEntity:$(".avis").attr("data-value-review"),
                 },
                 success: (res) => {
+                if(res.trim() !== ""){
                 resdata=JSON.parse(res);
-                console.log(resdata);
                 updateRating(resdata.notevalue);
-                }       
+                }  }     
             });  
 }
-
+//Click pour changer ou mettre rate 
         ratinginput.click(()=>{
             $.ajax({
                 url: "index.php?router=Rate",
@@ -911,8 +1009,9 @@ function getRate(){
                     idEntity:$(".avis").attr("data-value-review"),
                 },
                 success: (res) => {
+                if(res.trim() !== ""){
                 updateRating(res);
-                }       
+                }  }     
             });
         });
 
@@ -934,27 +1033,7 @@ function getRate(){
     });
 // ---------------------------------------------------------------
 
-
-/*--------- Gestion de favoris (Handle click sur icon favoris )-----------*/
-    let favoris=$(".boxv .favoris-icon");
-    $(".vehicule-list .boxv").mouseover(()=>{
-    favoris.show();});
-    $(".vehicule-list .boxv").mouseout(()=>{
-    favoris.hide();});
-favoris.click(()=>{
-    let isFavorite=favoris.hasClass("isFavorite");
-    console.log(isFavorite);
-    $.ajax({
-    url: "index.php?router=Favoris",
-    method: "POST",
-    data: {
-        vehiculeid:favoris.attr("data-value"),
-    },
-    success: (res) => {
-       
-    } ,      
-    });
-});
+//Function pour avoir et display la note d'une entite 
 function getNote(ismarque,identity,containernote){
     $.ajax({
             url: "index.php?router=getRate",
@@ -964,6 +1043,7 @@ function getNote(ismarque,identity,containernote){
                 idEntity:identity,
             },
             success: (res) => {
+            if(res.trim() !== ""){
               let inforate;
              const result=JSON.parse(res);
              if(result.avg !== undefined){
@@ -971,7 +1051,7 @@ function getNote(ismarque,identity,containernote){
                 else{inforate=$('<p> <span> &#9733; O/5 | 0 notes </span> </p>');}
                 containernote.empty();
                 containernote.append(inforate);
-            } ,     
+            } },     
         }); 
 }
 // ---------------------------------------------------------------
@@ -985,9 +1065,11 @@ function getmarqueVehicules($idmarque,$avis){
         idmarque:$idmarque,
      } ,
     success: (res) => {
+        if(res.trim() !== ""){
        const vehicules=JSON.parse(res);
        let containervehicule = $('<div class="container-vehicule"></div>');
         $.each(vehicules,(index, vehicule) => {
+/*----------------------------Création de box de véhicule  ------------------------------*/
        let vehiculebox=$('<div class="vehicule-box"> </div>');
        let imagecontainer=$('<div class="image-container"> <div>');
        let atag;
@@ -1001,7 +1083,19 @@ function getmarqueVehicules($idmarque,$avis){
        let marque=$('<p> </p>').html(vehicule.marquen+' '+vehicule.modelen);
        let version=$('<p> </p>').html(vehicule.versionn);
        let rate=$('<div> </div>');
+       let fav=$('<div class="favoris-icon" data-value="'+vehicule.idvehicule+'"> </div>');
+       let favicon=null;
        let id =vehicule.idvehicule;
+        <?php if(isset($_SESSION["userName"])){ ?>
+            if(vehicule.userfavoris =='1' && id !== 0 ){
+            favicon = $('<i class="fa-solid fa-bookmark " data-value="'+vehicule.idvehicule+'"></i>');
+        }
+        else
+        if(vehicule.userfavoris =='0' && id !== 0){
+            favicon = $('<i class="fa-regular fa-bookmark" data-value="'+vehicule.idvehicule+'"></i>');
+        }      
+        <?php } ?>
+       favicon.click(()=>handleFavoris(vehicule.idvehicule));
        getNote("false",id,rate);
        atag.append(img);
        imagecontainer.append(atag);
@@ -1010,26 +1104,69 @@ function getmarqueVehicules($idmarque,$avis){
        vehiculebox.append(imagecontainer);
        vehiculebox.append(infocontainer);
        vehiculebox.append(rate);
+       fav.append(favicon);
+       vehiculebox.append(fav);
        containervehicule.append(vehiculebox);
+/*-------------------------------------- ------------------------------*/
         });
        $(".vehicules-container").append(containervehicule);
-        },
+        }},
     error: function(error) {
           console.log(error.message);
         }  
    });
 }
-/* --------Diapo  --------*/
+/*------------------- Gestion de favoris (Handle click sur icon favoris )-----------*/
+function updateiconfavoris(idfavoris,added){
+    console.log(added);
+    console.log(idfavoris);
+    //Sélectionner l'icon de  précis (selon idfavoris)
+    const icon=$('.favoris-icon[data-value='+idfavoris+'] i');
+    if(added == '1' && idfavoris !="null"){
+        icon.removeClass("fa-regular");//regular sa veut dire empty 
+        icon.addClass("fa-solid");//solid  rempli 
+    }
+    else if(added == '0' && idfavoris !="null"){
+        icon.removeClass("fa-solid");
+        icon.addClass("fa-regular");
+    }
+}
+   
+    $(".vehicule-list .boxv").mouseover((e)=>{
+    $(".favoris-icon").show();});
+    $(".vehicule-list .boxv").mouseout((e)=>{
+    $(".favoris-icon").hide();});
+    //Function pour handler favoris 
+    function handleFavoris(idvehicule){
+    $.ajax({
+    url: "index.php?router=Favoris",
+    method: "POST",
+    data: {
+        vehiculeid:idvehicule,
+    },
+    success: (res) => {
+        result=JSON.parse(res);
+        //Get statut , pour displayer the correct icon (rempli ou vide )
+        if(result.status=="added"){
+            updateiconfavoris(idvehicule,true);
+         }
+         else{ updateiconfavoris(idvehicule,false);}
+    } ,      
+    });
+}
+
+/* --------Diapo  ---------------------------------------------------------------*/
 function getDiapo(){
     $.ajax({
     url: "index.php?router=getDiapo",
     method: "GET",
     data: {},
     success: (res) => {
+        if(res.trim() !== ""){
         $result=JSON.parse(res);
-        console.log($result);
         if($result !== undefined){
             var alldiapo=$result;
+            //Diapo chaque 5s 
             function renderdiapo(debut){
                 const fin =debut + 1;
                 const diapotoshow=alldiapo.slice(debut,fin);
@@ -1047,23 +1184,24 @@ function getDiapo(){
                 cover.append(title);
                 link.append(cover);
                 diapoContainer.append(link);
-                } 
+                } //Commence par le premier 
                 renderdiapo(0);
                 let debut= 1 ; 
+                //chaque 5s on ajoute 1 , si ==length en remet à 0 
                 setInterval(()=>{
                     renderdiapo(debut);
                     debut +=1;
                     if(debut>=alldiapo.length){debut=0}
                     },5000)
-                }}, 
+                }}}, 
         error:(error)=>{
             console.log(error.message);//si error en affiche l'erreur 
         } ,   
     }); 
 }
 
-
-
+/*----------------------------------------------------------------------*/
+//Updater les données d'un news 
 $("#form-news").submit((e)=>{
   e.preventDefault();
   $.ajax({
@@ -1081,6 +1219,7 @@ $("#form-news").submit((e)=>{
                 },
             });
 })
+//Ajouter News
 $("#form-news-add").submit((e)=>{
   e.preventDefault();
   $.ajax({
@@ -1091,6 +1230,7 @@ $("#form-news-add").submit((e)=>{
                 textenews: $("#textenewsadd").val(),
                 affichernews:$("#affichernewsadd").val(),
                 statunews:$("#statunewsadd").val(),
+                img:$("#imgnews").val(),
                 },
                 success: (data) => {
                     location.replace("index.php?router=categories");
@@ -1098,6 +1238,8 @@ $("#form-news-add").submit((e)=>{
             });
 })
 /*----------------------------------------------------------------------*/
+/*--------------------------MARQUE------------------------------------------*/
+//Update Marque
 $("#form-marque").submit((e)=>{
   e.preventDefault();
   const data={
@@ -1118,7 +1260,7 @@ $("#form-marque").submit((e)=>{
                 },
             });
 })
-
+//Ajouter Marque 
 $("#form-marque-add").submit((e)=>{
   e.preventDefault();
   let types=[];
@@ -1134,24 +1276,26 @@ $("#form-marque-add").submit((e)=>{
         sg:$("#sgadd").val(),
         creation:$("#creationadd").val(), 
         types:types, 
+        img:$("#imgmarque").val(),
       }
   $.ajax({
                 url: "index.php?router=addDataMarque",
                 method: "POST",
                 data: data,
                 success: (res) => {
-                     location.replace("index.php?router=categories");
+                 location.replace("index.php?router=categories");
                 },
             });
 })
 /*----------------------------------------------------------------------*/
-var modeleadd=false;
+/*------------------------Véhicule ---------------------------------*/
+var modeleadd=false;//boolean pour savoir si click sur ajouter nouveau ou pas 
 var versionadd=false;
 $(".modeleadd").click((e)=>{
     modeleadd=true});
 $(".versionadd").click((e)=>{
     versionadd=true});
-
+//Ajouter véhicule 
 $("#form-vehicule-add").submit((e)=>{
     let caract = [];
 $("input[name='caracvehicule[]']").each(function () {
@@ -1159,10 +1303,9 @@ $("input[name='caracvehicule[]']").each(function () {
         idcarac: $(this).data("value"),
         valeur: $(this).val()
     });
-    console.log("fom"+ $(this));
 });
-
   e.preventDefault();
+  //Les données récupérer from form 
   const data={
         idmarque:$("#marquevadd").val(),
         nommodele:$("#modelevadd").val(),
@@ -1174,26 +1317,34 @@ $("input[name='caracvehicule[]']").each(function () {
         versionadd:versionadd,
         modeleadd:modeleadd,
         caract:caract,
+        // img:$("#imgv"),
       }
   $.ajax({
                 url: "index.php?router=addDataVehicule",
                 method: "POST",
                 data: data,
                 success: (res) => {
-                    console.log(res);
-                    //  location.replace("index.php?router=categories");
+                     location.replace("index.php?router=categories");
                 },
             });
 })
 /*----------------------------------------------------------------------*/
-
+/*------------------------Set Item Local Storage----------------------------------*/
 });
-function setItem(id,name){
-    localStorage.setItem(name,id);
+function setItem(id,marque,modele,version,url,idtype){
+    const selectedVehicule={
+        id,
+        marque,
+        modele,
+        version,
+        url,
+        idtype,
+    }
+    localStorage.setItem('selectedVehicule',JSON.stringify(selectedVehicule));
 }
 
 
-
+//Creation de la table de vehicule selon la marque 
 function createtablevehicule(id){
     $.ajax({
     url: `index.php?router=getdatavehicule`,
@@ -1203,7 +1354,6 @@ function createtablevehicule(id){
         let addBtn;
         tableContainer=$(".gestion-table");
                 resdata=JSON.parse(res);
-                console.log(resdata);
                 const table=$('<table  border="1"> </table>');
                 const thead=$('<thead> </thead>');
                 const tr=$('<tr> </tr>');
@@ -1233,8 +1383,10 @@ function createtablevehicule(id){
                     tr.append(td);});
                     let td = $('<td class="option"></td>');
                     let deleteBtn = $('<a href="index.php?router=deletevehicule&id=' + row[0].valeur + '">Delete</a>');
+                    let caracBtn = $('<a href="index.php?router=Vehicule&id=' + row[0].valeur + '">Voir caractéristiques</a>');
                     addBtn=$('<a href="index.php?router=addvehicule&id=' + row[1].valeur + '">Ajouter  Véhicule</a>'); 
                     td.append(deleteBtn);
+                    td.append(caracBtn);
                     tr.append(td);
                     tbody.append(tr);
                  });
@@ -1253,6 +1405,10 @@ function createtablevehicule(id){
         } ,   
     }); 
 }
+
+
+
+//Creation de tous les tables selon category 
 function createtable(category,id){
     $.ajax({
     url: `index.php?router=getdata${category}`,
@@ -1359,9 +1515,6 @@ function createtable(category,id){
         } ,   
     }); 
 }
-// /*----------------------------Véhicules ------------------------------*/
-/* --------Avoir tous les véhicules d'une marque --------*/
-
 
     </script>
     <?php

@@ -7,6 +7,8 @@ require_once("CommonViews.php");
 
 class categoriesView{
 
+
+    //Les categories 
     public function showCategories(){
         ob_start();
         $r=new commonViews();
@@ -53,7 +55,7 @@ class categoriesView{
         require("layout2.php"); 
     }
 
-
+   //Display Les informations pour modification de News 
     public function showNewsInfo($idnews){
         ob_start();
         $r=new commonViews();
@@ -104,7 +106,7 @@ class categoriesView{
     }
 
 
-
+    //Display Formulaire Pour l'ajout d'un news 
     public function showAddNews(){
         ob_start();
         $r=new commonViews();
@@ -138,6 +140,10 @@ class categoriesView{
            <option value='0' >Supprimer</option>
             </select>     
             </div>
+            <div class="form-item">
+            <label for="imgnews">Image</label>
+            <input type="text" name="imgnews" id='imgnews'  placeholder="./images/News/imgname">     
+            </div>
             <div class="flex-end">
              <input type="submit" value="Ajouter" class="submit-btn" >
              </div>
@@ -156,6 +162,7 @@ class categoriesView{
     }
 
 
+   //Les infos de Marque 
     public function showMarqueInfo($idmarque){
         ob_start();
         $r=new commonViews();
@@ -214,6 +221,9 @@ class categoriesView{
         $content = ob_get_clean();
         require("layout2.php"); 
     }
+
+   
+    //Display Formulaire Pour l'ajout d'une marque
     public function showAddMarque(){
         ob_start();
         $r=new commonViews();
@@ -264,6 +274,10 @@ class categoriesView{
                 echo '<input type="checkbox" name="typev[]"  value='.$type["idtype"].' >'.$type["nom"].'';  } ?> 
             </div>
             </div>
+            <div class="form-item">
+            <label for="imgmarque">Image</label>
+            <input type="text" name="imgmarque" id='imgmarque'  placeholder="./images/Marques/imgname">     
+            </div>
             <div class="flex-end">
              <input type="submit" value="Ajouter" class="submit-btn" >
              </div>
@@ -281,6 +295,7 @@ class categoriesView{
         require("layout2.php"); 
     }
 
+    //Display Formulaire Pour l'ajout d'un vehicule 
     public function showAddVehicule($idmarque){
         ob_start();
         $r=new commonViews();
@@ -348,6 +363,10 @@ class categoriesView{
                foreach($types as $type){
                 echo '<input type="radio" name="typevehicule"   value='.$type["idtype"].' >'.$type["nom"].'';  } ?> 
              </div>
+            </div>
+            <div class="form-item">
+            <label for="imgv">Image</label>
+            <input type="text" name="imgv" id='imgv'  placeholder="./images/Véhicules/imgname">     
             </div>
             <div class="flex-end">
              <input type="submit" value="Ajouter" class="submit-btn" >

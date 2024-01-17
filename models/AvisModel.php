@@ -1,6 +1,10 @@
 <?php
 require_once("ConnexionModel.php");
 class avisModel{
+
+
+
+  //Tous Les avis 
     public function getAllavis($isMarque,$idEntity,$iduser){
         $obj = new connexion();
         $c = $obj->connect();
@@ -9,7 +13,7 @@ class avisModel{
         EXISTS(SELECT * from likeavis WHERE likeavis.id_user= :user AND likeavis.id_avis = v.idavis ) as userlike
         FROM avis v
         JOIN user u ON v.id_user = u.iduser 
-        WHERE v.estmarque =:ismarque  AND $entity = :iden AND v.statut = :statu ";
+        WHERE v.estmarque =:ismarque  AND $entity = :iden AND v.statut = :statu AND u.statutuser='Inscrit' ";
     
     
         $qtf = $c->prepare($query);
@@ -23,6 +27,8 @@ class avisModel{
     
         return $r; 
       }
+
+    //Ajouter un nouveau avis 
       
     public function setAvis($comment,$isMarque,$idEntity,$iduser){
         $obj = new connexion();
@@ -43,6 +49,8 @@ class avisModel{
         $obj->disconnect($c);
     }
 
+
+    //Si user et idavis existe déja 
     public function userlikeavis($iduser,$idavis){
         $obj = new connexion();
         $c = $obj->connect();
@@ -59,6 +67,8 @@ class avisModel{
     
         return ($qtf->rowCount()>0); 
     }
+
+    //Faire un like sur un avis 
     public function likeavis($iduser,$idavis){
         $obj = new connexion();
         $c = $obj->connect();
@@ -75,6 +85,8 @@ class avisModel{
     
         return $r; 
     }
+
+    //Remove Like from un avis 
     public function unlikeavis($iduser,$idavis){
         $obj = new connexion();
         $c = $obj->connect();
@@ -92,7 +104,9 @@ class avisModel{
         return $r; 
     }
 
-
+   // AVOIR les 3 avis Les plus apprécis
+   // EXISTS C'est Pour avoir le statu lors de l'affichement des j'aime 
+   // Si userlike 0 ca veut dire il n'a pas avis
     public function getBestReview($isMarque,$idEntity,$iduser){
         $obj = new connexion();
         $c = $obj->connect();
@@ -119,30 +133,7 @@ class avisModel{
         return $r; 
       } 
 
-      public function gestionAvis(){
-
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "SELECT a.idavis as idavis,a.commentaire as commentaire,a.statut as statut , u.nom as nomuser ,m.nom as marquen,vers.nom as versionn
-        FROM avis a
-        LEFT JOIN user u ON a.id_user =u.iduser
-        LEFT JOIN vehicule v ON a.id_vehicule=v.idvehicule
-        LEFT JOIN vers vers ON v.id_version=vers.idversion
-        LEFT JOIN marque m ON a.id_marque=m.idmarque";    
-        $r=$obj->request($c,$qtf);
-        $obj->disconnect($c);
-        return $r; 
-      }
-      public function refuseAvis($idavis){
-        $obj = new connexion();
-        $c = $obj->connect();
-        $qtf = "UPDATE avis
-        SET  avis.statut=false
-        WHERE avis.idavis=$idavis";    
-        $r=$obj->request($c,$qtf);
-        $obj->disconnect($c);
-        return $r; 
-      }
+     
 }
 
 

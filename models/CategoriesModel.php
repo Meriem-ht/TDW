@@ -1,6 +1,9 @@
 <?php
 require_once("ConnexionModel.php");
 class categoriesModel{
+
+
+
   public function infoNews($idnews){
     $obj= new connexion();
     $c=$obj->connect();
@@ -108,8 +111,9 @@ class categoriesModel{
         $qtf->bindParam(3, $statu);
         $qtf->bindParam(4, $afficher);
         $r=$qtf->execute();
+        $lastid = $c->lastInsertId();
         $obj->disconnect($c);
-        return $r; 
+        return $lastid; 
       }
       
       public function updateDataNews($id,$titre,$texte,$afficher,$statu){
@@ -127,6 +131,31 @@ class categoriesModel{
         $obj->disconnect($c);
         return $r; 
       }
+
+
+      public function addNImg($url){
+        $obj = new connexion();
+        $c = $obj->connect();
+        $query = "INSERT INTO  image (url) VALUES(?)";  
+        $qtf = $c->prepare($query);  
+        $qtf->bindParam(1, $url);
+        $r=$qtf->execute();
+        $lastid = $c->lastInsertId();
+        $obj->disconnect($c);
+        return $lastid; 
+     } 
+
+     public function addImageNews($idimage,$idnews){
+      $obj = new connexion();
+      $c = $obj->connect();
+      $query = "INSERT INTO image_news (id_image,id_news) VALUES(?,?)";  
+      $qtf = $c->prepare($query);  
+      $qtf->bindParam(1,$idimage);
+      $qtf->bindParam(2,$idnews);
+      $r=$qtf->execute();
+      $obj->disconnect($c);
+      return $r; 
+     }
      
 
       public function getDataAvis(){
@@ -217,6 +246,9 @@ class categoriesModel{
       var_dump($r);
       return $r; 
     }
+
+
+
     public function addDataMarque($data){
       $obj = new connexion();
       $c = $obj->connect();
@@ -233,6 +265,30 @@ class categoriesModel{
       $obj->disconnect($c);
       return $lastid; 
    }
+   public function addMImg($url){
+    $obj = new connexion();
+    $c = $obj->connect();
+    $query = "INSERT INTO  `image` (`url`) VALUES(?)";  
+    $qtf = $c->prepare($query);  
+    $qtf->bindParam(1, $url);
+    $r=$qtf->execute();
+    $lastid = $c->lastInsertId();
+    $obj->disconnect($c);
+    return $lastid; 
+ } 
+ public function addImageMarque($idimage,$idmarque){
+  $obj = new connexion();
+  $c = $obj->connect();
+  $query = "INSERT INTO image_marque (id_image,id_marque) VALUES(?,?)";  
+  $qtf = $c->prepare($query);  
+  $qtf->bindParam(1,$idimage);
+  $qtf->bindParam(2,$idmarque);
+  $r=$qtf->execute();
+  $obj->disconnect($c);
+  return $r; 
+ }
+
+
    public function getDataVehicule($idmarque){
     $obj= new connexion();
     $c=$obj->connect();
@@ -255,6 +311,31 @@ class categoriesModel{
        $obj->disconnect($c);
        return $data;
   }
+  public function addVImg($url){
+    $obj = new connexion();
+    $c = $obj->connect();
+    $query = "INSERT INTO  image (url) VALUES(?)";  
+    $qtf = $c->prepare($query);  
+    $qtf->bindParam(1, $url);
+    $r=$qtf->execute();
+    $lastid = $c->lastInsertId();
+    $obj->disconnect($c);
+    return $lastid; 
+ } 
+ public function addImageVehicule($idimage,$idvehicule){
+  $obj = new connexion();
+  $c = $obj->connect();
+  $query = "INSERT INTO image_vehicule (id_image,id_vehicule) VALUES(?,?)";  
+  $qtf = $c->prepare($query);  
+  $qtf->bindParam(1,$idimage);
+  $qtf->bindParam(2,$idvehicule);
+  $r=$qtf->execute();
+  $obj->disconnect($c);
+  return $r; 
+ }
+
+
+
 
   public function deleteVehicule($id){
     $obj = new connexion();
@@ -268,6 +349,8 @@ class categoriesModel{
     $obj->disconnect($c);
     return $r; 
   }
+
+
   public function getcarac(){
     $obj = new connexion();
     $c = $obj->connect();
@@ -278,6 +361,9 @@ class categoriesModel{
     $obj->disconnect($c);
     return $r; 
   }
+
+
+
   public function addDVehicule($data,$idmodele,$idversion){
     $obj = new connexion();
     $c = $obj->connect();
@@ -293,6 +379,8 @@ class categoriesModel{
     $obj->disconnect($c);
     return $lastid; 
  }
+
+
  public function addModele($nom,$idmarque){
   $obj = new connexion();
   $c = $obj->connect();
@@ -305,6 +393,9 @@ class categoriesModel{
   $obj->disconnect($c);
   return $lastid; 
  }
+
+
+
  public function addVersion($nom,$idmodele,$debut,$fin){
   $obj = new connexion();
   $c = $obj->connect();
@@ -319,6 +410,8 @@ class categoriesModel{
   $obj->disconnect($c);
   return $lastid; 
  }
+
+
  public function getModele($nom,$idmarque){
   var_dump($nom,$idmarque);
   $obj = new connexion();
@@ -333,6 +426,9 @@ class categoriesModel{
   if($r) {return $r['idmodele'];}
   else {return false;}
  }
+
+
+
  public function getVersion($nom,$idmodele){
   $obj = new connexion();
   $c = $obj->connect();

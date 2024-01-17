@@ -55,6 +55,36 @@ class marqueView{
         $content = ob_get_clean();
         require("layout.php");
      } 
+     public function vehiculePrincipale($vehicules,$idmarque){?>
+       <div class="v-principale">
+         <?php if($vehicules !== null){?>
+        <h1 class="heading">Véhicules Principales</h1>
+        <div class="vehicule-list">
+        <?php foreach($vehicules as $vehicule ) {?>
+         <div class="boxv">
+            <div class="img-v">
+                <div class="logo-box">
+                <?php echo '<a href="index.php?router=Vehicule&id='. $vehicule['idvehicule'] .'">
+                 <img src=" '.$vehicule['url'].' " alt=""></a>'; ?>
+              </div>
+            </div>
+            <div class="info-v">
+                <p><?php echo $vehicule['marquen'].' '.$vehicule['modelen'] ; ?></p>
+                <p><?php echo $vehicule['versionn'] ?></p>
+            </div>
+         </div>
+         <?php }?>
+         <button class="previous scroll-btn"><i class="fa-solid fa-chevron-left" style="color: #ffffff;"></i></button>
+         <button class="next scroll-btn"><i class="fa-solid fa-chevron-right" style="color: #ffffff;"></i></button>
+        </div>
+        <div class="flex-end">
+            <a class="vplus-vehicule" href="index.php?router=marqueVehicules&id=<?php echo $idmarque ;?>" >Voir tous les véhicules <i class="fa-solid fa-chevron-right"></i> </a>
+         </div>
+         <div class="vehicule-container" data-value="<?php echo $idmarque;?>">      
+    </div>
+    <?php
+     }
+    }
 
     public function MarqueDetail($idmarque){
         $common=new commonViews();
@@ -64,45 +94,10 @@ class marqueView{
          if(!isset($vehicules)){
             $vehicules=null;
         } 
-         $common->script();  
+        $common->script();  
         ob_start();
         $this->infoMarque($marque);
-        ?>
-        
-        <div class="v-principale">
-            <?php if($vehicules !== null){?>
-            <h1 class="heading">Véhicules Principales</h1>
-            <div class="vehicule-list">
-            <?php foreach($vehicules as $vehicule ) {?>
-             <div class="boxv">
-                <div class="img-v">
-                    <?php if (isset($_SESSION["userName"])){
-                       echo'<i class="fa-regular fa-bookmark favoris-icon" data-value="'.$vehicule['idvehicule'].'"></i>';
-                    }?>
-                    <div class="logo-box">
-                    <?php echo '<a href="index.php?router=Vehicule&id='. $vehicule['idvehicule'] .'">
-                     <img src=" '.$vehicule['url'].' " alt=""></a>'; ?>
-                  </div>
-                </div>
-                <div class="info-v">
-                    <p><?php echo $vehicule['marquen'].' '.$vehicule['modelen'] ; ?></p>
-                    <p><?php echo $vehicule['versionn'] ?></p>
-                </div>
-             </div>
-             <?php }?>
-             <button class="previous scroll-btn"><i class="fa-solid fa-chevron-left" style="color: #ffffff;"></i></button>
-             <button class="next scroll-btn"><i class="fa-solid fa-chevron-right" style="color: #ffffff;"></i></button>
-            </div>
-            <div class="flex-end">
-                <a class="vplus-vehicule" href="index.php?router=marqueVehicules&id=<?php echo $idmarque ;?>" >Voir tous les véhicules <i class="fa-solid fa-chevron-right"></i> </a>
-             </div>
-             <div class="vehicule-container" data-value="<?php echo $idmarque;?>">      
-        </div>
-            <?php } ?>
-        </div>
-     
-        <?php 
-
+        $this->vehiculePrincipale($vehicules,$idmarque);
         $common->avis("true",$marque);
         $common->allavis("true",$marque);
   

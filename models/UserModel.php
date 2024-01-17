@@ -2,6 +2,7 @@
 require_once("ConnexionModel.php");
 class userModel{
 
+    //get user if exists 
     public function userexist($username){
         $obj = new connexion();
         $c = $obj->connect();
@@ -16,6 +17,9 @@ class userModel{
         $obj->disconnect($c);
         return ($qtf->rowCount()>0);
     }
+
+
+    //Registration 
     public function register($data) {
         $obj = new connexion();
         $c = $obj->connect();
@@ -34,6 +38,8 @@ class userModel{
         $obj->disconnect($c);
         return ($qtf->rowCount() >0);   
 }
+
+    //login 
     public function login($username,$password){
         $obj = new connexion();
         $c = $obj->connect();
@@ -54,6 +60,9 @@ class userModel{
         $obj->disconnect($c);
         return false;
     }
+
+
+    //Login Admin
     public function loginAdmin($username,$password){
         $obj = new connexion();
         $c = $obj->connect();
@@ -69,36 +78,65 @@ class userModel{
         $obj->disconnect($c);
         return ($qtf->rowCount() >0);
     }
- 
-    public function addFavoris($iduser,$idvehicule) {
+
+    //Les Favoris d'un utilisateur 
+    public function userFavoris($iduser,$idfavoris){
         $obj = new connexion();
         $c = $obj->connect();
-        $query = "INSERT INTO favoris (id_user,id_vehicule)
-                VALUES(?,?)";
+        $query = "SELECT *
+        FROM favoris f
+        WHERE f.id_user =?  AND f.id_vehicule = ?";
 
         $qtf = $c->prepare($query);
         $qtf->bindParam(1, $iduser);
-        $qtf->bindParam(2, $idvehicule);
+        $qtf->bindParam(2, $idfavoris);
         $qtf->execute();
+        
         $obj->disconnect($c);
-        return ($qtf->rowCount() >0);   
-}
-        public function removeFavoris($iduser,$idvehicule) {
-         $obj = new connexion();
-         $c = $obj->connect();
-         $query = "DELETE FROM  favoris f
-         WHERE f.id_user=? AND f.id_vehicule=?";
+    
+        return ($qtf->rowCount()>0); 
+    }
+
+    //Ajouter aux favoris une véhicule 
+    public function addFavoris($iduser,$idfavoris){
+        $obj = new connexion();
+        $c = $obj->connect();
+        $query = "INSERT 
+        INTO favoris (id_user,id_vehicule)
+        VALUES(?,?)";
 
         $qtf = $c->prepare($query);
         $qtf->bindParam(1, $iduser);
-        $qtf->bindParam(2, $idvehicule);
-        $qtf->execute();
+        $qtf->bindParam(2, $idfavoris);
+        $r=$qtf->execute();
+        
         $obj->disconnect($c);
-        return ($qtf->rowCount() >0);   
-}
+    
+        return $r; 
+    }
 
+    //Enlever from favoris un véhicule 
+    public function removeFavoris($iduser,$idfavoris){
+        $obj = new connexion();
+        $c = $obj->connect();
+        $query = "DELETE 
+        FROM favoris f
+        WHERE f.id_user =?  AND f.id_vehicule = ?";
+
+        $qtf = $c->prepare($query);
+        $qtf->bindParam(1, $iduser);
+        $qtf->bindParam(2, $idfavoris);
+        $r=$qtf->execute();
+        
+        $obj->disconnect($c);
+    
+        return $r; 
+    }
+ 
+
+    //Ajouter la note sur une entité , si enrg existe faire update 
     public function setRate($note, $isMarque, $idEntity, $iduser)
-{
+    {
     $obj = new connexion();
     $c = $obj->connect();
 
@@ -122,6 +160,8 @@ class userModel{
 
     return $note;
 }
+
+//Total de la note et combien de personne a noter cette Marque 
 public function getTotalRate($isMarque,$idEntity){
     $obj = new connexion();
     $c = $obj->connect();
@@ -141,6 +181,9 @@ public function getTotalRate($isMarque,$idEntity){
 
     return $r;  
 }
+
+//Avoir le Rate d'une entité 
+
 public function getRate($isMarque,$idEntity){
     $obj = new connexion();
     $c = $obj->connect();
@@ -160,26 +203,50 @@ public function getRate($isMarque,$idEntity){
     return $r;  
 }
 
-public function gestionUsers(){
+//Favoris d'un user 
+  public function getUserFavoris($iduser){
     $obj = new connexion();
     $c = $obj->connect();
-    $qtf = "SELECT u.iduser,u.nom,u.prenom,u.username,u.sexe,u.date_nais ,u.statutuser as statut
-    FROM user u";    
-    $r=$obj->request($c,$qtf);
+    $query = "SELECT m.nom as marquen ,ve.nom as versionn ,i.url,mo.nom as modelen ,v.idvehicule
+    FROM favoris f 
+    JOIN vehicule v ON v.idvehicule=f.id_vehicule
+    JOIN marque m ON m.idmarque=v.id_marque
+    JOIN modele mo ON mo.idmodele=v.id_modele
+    JOIN vers ve ON ve.idversion=v.id_version
+    JOIN image_vehicule iv ON iv.id_vehicule=v.idvehicule
+    JOIN image i ON iv.id_image = i.idimage
+    WHERE f.id_user=?
+    GROUP BY v.idvehicule ,m.nom,ve.nom,mo.nom";
+    $qtf = $c->prepare($query);
+    $qtf->bindParam(1, $iduser);
+    $qtf->execute();
+    $r = $qtf->fetchAll(PDO::FETCH_ASSOC);
     $obj->disconnect($c);
-    return $r; 
-  }
-  //DELETE UPDATE BLOQUE AND VALIDE
-  public function updateuser($iduser,$statut){
-    $obj = new connexion();
-    $c = $obj->connect();
-    $qtf = "UPDATE user
-    SET  user.statutuser=$statut
-    WHERE user.iduser=$iduser";    
-    $r=$obj->request($c,$qtf);
-    $obj->disconnect($c);
-    return $r; 
-  }
+
+    return $r;  
+}
+
+//Les informations d'un utilisateur 
+public function getInfoUser($id){
+        $obj = new connexion();
+        $c = $obj->connect();
+        $query = "SELECT u.nom as Nom , u.prenom as Prenom, u.username as UserName ,u.sexe as Sexe ,u.date_nais as Date_Naissance
+        FROM user u
+        WHERE u.iduser=?";    
+        $qtf = $c->prepare($query);
+        $qtf->bindParam(1, $id);
+        $result= $qtf->execute();
+        while ($row = $qtf->fetch(PDO::FETCH_ASSOC)){
+            $enrg = array();
+            foreach($row as $carac => $valeur){
+            $enrg[] = ["col"=>$carac , "valeur" =>$valeur];}
+        };
+        $obj->disconnect($c);
+        return $enrg; 
+     
+}
+
+
 }
 
 ?>

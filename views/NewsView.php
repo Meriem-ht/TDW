@@ -1,6 +1,8 @@
 <?php
 include_once("./controllers/NewsController.php");
 class newsView{
+
+
     public function showNews(){
         $r=new newsController();
         $news=$r->getallNews();
@@ -29,6 +31,8 @@ class newsView{
         $content = ob_get_clean();
         require("layout.php");
     }
+
+    
     public function showNewsDetail($idnews){
         $r=new newsController();
         $news=$r->getNews($idnews);

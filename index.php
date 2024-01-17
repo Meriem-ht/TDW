@@ -8,10 +8,13 @@ require_once("controllers/YearController.php");
 require_once("controllers/VersionController.php");
 require_once("controllers/VehiculeController.php");
 require_once("controllers/AvisController.php");
-include_once("./controllers/NewsController.php");
-include_once("./controllers/AcceuilController.php");
-include_once("./controllers/ComparateurController.php");
-include_once("./controllers/CategoriesController.php");
+require_once("./controllers/NewsController.php");
+require_once("./controllers/AcceuilController.php");
+require_once("./controllers/ComparateurController.php");
+require_once("./controllers/CategoriesController.php");
+require_once("./controllers/ContactController.php");
+require_once("./controllers/GuideController.php");
+require_once("./controllers/notFoundController.php");
 require_once("views/CommonViews.php");
 $result=null;
 if (isset($_GET['router'])){
@@ -28,12 +31,16 @@ if (isset($_GET['router'])){
         case 'UserRegister' :
             $r=new userController();
             $r->register($_POST);
-            break;
-        
+            break;      
         case 'UserLogin' :
             if(isset($_POST["username"]) && isset($_POST["password"])){
             $r=new userController();
             $r->login($_POST['username'],$_POST['password']);}
+            break;
+        case 'UserProfile' :
+            if(isset($_SESSION["userId"]) || isset($_SESSION["admin"])){
+            $r=new userController();
+            $r->showProfile($_GET["id"]);}
             break;
         case 'UserLogout' :
             $r=new userController();
@@ -42,9 +49,14 @@ if (isset($_GET['router'])){
             exit();
             break;
         case 'Favoris':
-            if(isset($_POST["isFavorite"]) && isset($_POST["vehiculeid"])){
+            if(isset($_POST["vehiculeid"])){
             $r=new userController();
-            $r->setFavoris($_POST["isFavorite"],$_POST["vehiculeid"]);}
+            $r->setFavoris($_POST["vehiculeid"]);}
+            break;
+        case 'getFavoris':
+            if(isset($_POST["vehiculeid"])){
+            $r=new userController();
+            $r->getFavoris($_POST["vehiculeid"]);}
             break;
         case 'Rate':
             if(isset($_POST["isMarque"]) && isset($_POST["idEntity"]) && isset($_POST["note"])  ){
@@ -214,7 +226,7 @@ if (isset($_GET['router'])){
             break;
         case 'addDataNews':
             $r=new categoriesController();
-            $r->addDataNews($_POST["tnews"],$_POST["textenews"],$_POST["affichernews"],$_POST["statunews"]);
+            $r->addDataNews($_POST["tnews"],$_POST["textenews"],$_POST["affichernews"],$_POST["statunews"],$_POST["img"]);
             break;
         case 'addnews':
             $r=new categoriesController();
@@ -261,8 +273,8 @@ if (isset($_GET['router'])){
             $r->updateDataMarque($_POST);
             break;
         case 'addDataMarque':
-        $r=new categoriesController();
-        $r->addDataMarque($_POST);
+            $r=new categoriesController();
+            $r->addDataMarque($_POST);
         break;
         case 'addmarque':
             $r=new categoriesController();
@@ -284,10 +296,17 @@ if (isset($_GET['router'])){
             $r=new categoriesController();
             $r->addDataVehicule($_POST);
             break;
-            
-        
+        case 'Contact':
+            $c=new contactController();
+            $c->showContact();
+            break;
+        case 'Guide d\'achat':
+            $r=new guideController();
+            $r->showGuide();
+            break;      
     default:
-        echo 'not found';
+        $r=new notFoundController();
+        $r->notFound();
         break;
     }
 

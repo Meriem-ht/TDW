@@ -2,6 +2,8 @@
 require_once("ConnexionModel.php");
 class comparateurModel{
 
+  
+      //Selon les deux ids on faire soit l'insertion soit update de nbcompare 
       public function addcompar($v1,$v2){
         $obj= new connexion();
         $c=$obj->connect();

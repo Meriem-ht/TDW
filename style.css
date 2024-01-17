@@ -28,6 +28,9 @@ font-size: 16px;
 .mb-2{
     margin-bottom: 15px;
 }
+.mb-4{
+    margin-bottom: 40px;
+}
 .container{
     margin:0 5%;
     padding:0 5%;
@@ -281,8 +284,48 @@ display: inline-block;
     gap:10px;
     overflow-x: hidden;
     padding:10px;
-    /* position: relative; */
-  
+}
+.populaire-compare{
+    margin-top:20px;
+}
+.populaire-compare .vehicule-list .vehicule-list-container{
+    display:flex;
+    flex-direction: column;
+}
+.populaire-compare .vehicule-list .vehicule-list-box{
+    display:flex;
+    gap:-5px;
+    height:200px;
+    box-shadow: 0 1px 4px 0 rgb(0 0 0/16%);
+    position:relative;
+}
+.populaire-compare .vehicule-list .vehicule-list-box::after{
+    content: "vs";
+    position: absolute;
+    top:20%;
+    left:45%;
+    background-color: var(--primary-color);
+    color:white;
+    font-weight: bold;
+    width:25px;
+    height:25px;
+    text-align: center;
+    border-radius: 50%;
+
+}
+.populaire-compare .vehicule-list .boxv{
+    border-radius: 15px;
+    padding-bottom: 20px;
+    box-shadow:none;
+    flex:0 0 50%;
+    margin-bottom: 20px;
+}
+.populaire-compare .vehicule-list .boxv .img-v{
+    height: 100px;
+    padding:0px;
+}
+.favoris-section .vehicule-list{
+    flex-wrap: wrap;
 }
 .vehicule-list .boxv{
     border-radius: 15px;
@@ -302,8 +345,6 @@ display: inline-block;
     color: var(--primary-color);
     display: none;
 }
-
-
 
 
 .scroll-btn{
@@ -485,6 +526,9 @@ font-size: 18px;}
 .mt-1{
     margin-top: 10px;
 }
+.mt-4{
+    margin-top: 40px;
+}
 .v-allavis .v-img-avis{
 height:100px;
 width:30%;
@@ -569,6 +613,7 @@ width:30%;
 
 }
 /* ----------------- END News(PAGE ALL / PAGE DETAIL ------------------------------ */
+/* ------------------------ Comparateur ------------------------------ */
 
 .compar-box{
 margin-top: 20px;
@@ -701,7 +746,7 @@ table td,table th {
     color:var(--heading-color);
 }
 
-
+/* ------------------------END  Comparateur ------------------------------ */
 /* ----------------------------- Start Accueil------------------------------ */
 .diapo-img{
     height:75vh;
@@ -924,7 +969,57 @@ border: 1px solid #e1e1e1;
     width:fit-content;
 }
 
+/* -----------------------------ADMIN END ----------------------------------- */
 
+/* -----------------------------Contact & Guide  ----------------------------------- */
 
+.contact{
+    margin-top:30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:30px;
+    padding:40px
+    
+}
+.contact-us{
+    display: flex;
+    gap:20px;
+}
+.contact-us i{
+    color:var(--primary-color);
+    font-size: 25px;
 
-/* -----------------------------ADMIN STRART ----------------------------------- */
+}
+.contact-us p{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.guide{
+    width:70%;
+    color:var(--paragraph-color);
+    line-height: 1.58;
+}
+.info-user{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    margin:30px 0px ;
+}
+.info-user .info{
+    display: flex;
+    gap:20px;
+    align-items: center;
+}
+.info-user h3{
+    width:150px;
+
+    color: var(--primary-color);
+}
+.info-user p{
+    color:var(--paragraph-color);
+    font-weight: bold;
+    font-size: 16px;
+}
